@@ -1,0 +1,14 @@
+{
+  "name": "vendor_name/word-sort",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "require": {
+    "ext-mbstring": "*",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "script\\": "script/"
+    }
+  }
+}

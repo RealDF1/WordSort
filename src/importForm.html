@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка файла для обработки</title>
+    <style>
+        .container {
+            padding: 50px;
+        }
+        .DBInsert {
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="uploadFile">
+            <h1>Загрузите файл со словами</h1>
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <button type="submit">Загрузить</button>
+            </form>
+        </div>
+        <div class="DBInsert">
+            <form action="" method="post">
+                <h1>Тестирование добавления в базу данных</h1>
+                <button class="" name="insert" value="insert">Добавить в базу данных</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

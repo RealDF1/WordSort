@@ -7,6 +7,8 @@ use Generator;
 class WordHandler
 {
     private mixed $filePath;
+    private const toEncode = "UTF-8";
+    private const encoding = ['UTF-8', 'Windows-1251'];
     private string $letterFolder = __DIR__ . "/../library";
 
     public function __construct()
@@ -27,7 +29,16 @@ class WordHandler
         $handle = fopen($this->filePath, "r");
 
         while (!feof($handle)) {
-            yield mb_convert_encoding(trim(fgets($handle)), 'UTF-8', 'Windows-1251');
+            $line = trim(fgets($handle));
+
+            $detectedEncoding = mb_detect_encoding($line, self::encoding);
+
+            // Если кодировка не совпадает, конвертируем
+            if ($detectedEncoding !== self::toEncode) {
+                $line = mb_convert_encoding($line, self::toEncode, $detectedEncoding);
+            }
+
+            yield $line;
         }
 
         fclose($handle);
@@ -47,13 +58,10 @@ class WordHandler
     private function processWord(): void
     {
         $letterCounts = 0;
-        $firstLetterOld = '';
+        $firstLetterOld = null;
 
         foreach ($this->getWordFromFile() as $word) {
-            if ($word==='') {
-                echo "Файл пустой.\n";
-                return;
-            }
+            if ($word === '') continue;
 
             if (isset($firstLetter)) {
                 $firstLetterOld = $firstLetter;
@@ -61,6 +69,8 @@ class WordHandler
 
             // Получаем первую букву слова
             $firstLetter = mb_substr(mb_strtolower($word), 0, 1);
+
+
 
             // Создаем папку для буквы, если ее нет
             $letterFolder = $this->letterFolder . "/$firstLetter";
@@ -77,7 +87,7 @@ class WordHandler
             // Обновляем счетчик букв
             $letterCounts += $letterCount;
 
-            if ($firstLetter !== $firstLetterOld && !isset($firstLetter)) {
+            if ($firstLetter !== $firstLetterOld && $firstLetterOld) {
                 $this->letterCountToFile($firstLetterOld, $letterCounts);
                 $letterCounts = 0;
             }
